@@ -1,0 +1,47 @@
+name: Windows release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run check
+      - run: npm run dist:win
+      - name: Checksums
+        shell: pwsh
+        run: Get-FileHash -Algorithm SHA256 dist/RunNotch-*-x64.exe | ForEach-Object { "$($_.Hash.ToLower())  $([IO.Path]::GetFileName($_.Path))" } | Set-Content dist/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RunNotch-Windows-${{ github.ref_name }}
+          path: |
+            dist/RunNotch-Setup-*-x64.exe
+            dist/RunNotch-Portable-*-x64.exe
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $assets = @(
+            (Get-ChildItem "dist/RunNotch-Setup-*-x64.exe").FullName
+            (Get-ChildItem "dist/RunNotch-Portable-*-x64.exe").FullName
+            (Resolve-Path "dist/SHA256SUMS.txt").Path
+          )
+          gh release create $env:GITHUB_REF_NAME $assets --verify-tag --generate-notes

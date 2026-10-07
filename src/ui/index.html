@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RunNotch</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <main id="app" aria-label="RunNotch command monitor">
+    <section id="detail-card" class="detail-card" aria-live="polite" aria-label="Run details" hidden></section>
+    <div id="card-tail" class="card-tail" aria-hidden="true" hidden></div>
+
+    <section id="notch" class="notch" aria-label="Tracked runs">
+      <button id="wake-pill" class="wake-pill" type="button" aria-label="Show tracked runs" aria-expanded="false"></button>
+      <div id="job-list" class="job-list" role="list"></div>
+      <div class="notch-footer">
+        <button id="settings-button" class="settings-button" type="button" aria-label="Open RunNotch settings" title="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10.1 3.2h3.8l.5 2.2c.5.2 1 .5 1.5.9L18 5.6l1.9 3.3-1.7 1.5c.1.5.1 1.1 0 1.6l1.7 1.5-1.9 3.3-2.1-.7c-.5.4-1 .7-1.5.9l-.5 2.2h-3.8L9.6 17c-.5-.2-1-.5-1.5-.9l-2.1.7-1.9-3.3L5.8 12a7.8 7.8 0 0 1 0-1.6L4.1 8.9 6 5.6l2.1.7c.5-.4 1-.7 1.5-.9l.5-2.2Zm1.9 5.1a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Z"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+    <div id="announcer" class="sr-only" aria-live="polite"></div>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
